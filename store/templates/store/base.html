@@ -1,0 +1,79 @@
+{% load static %}
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#ffffff">
+  <title>{% block title %}TAZA FOOD CORNER{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'store/style.css' %}">
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+  <div class="announcement-bar"><span>FRESHLY MADE. HAPPILY DELIVERED.</span><span class="announcement-right">TAZA FOOD CORNER · CHITTAGONG</span></div>
+  <header class="site-header">
+    <div class="header-inner container">
+      <a class="brand" href="{% url 'home' %}" aria-label="Taza Food Corner home">
+        <img class="brand-logo" src="{% static 'store/images/taza-logo.png' %}" alt="Restaurant Fork and Spoon logo" width="54" height="54" decoding="async">
+        <span class="brand-copy"><strong>TAZA</strong><small>FOOD CORNER</small></span>
+      </a>
+      <nav class="main-nav" aria-label="Main navigation">
+        <a href="{% url 'home' %}" data-en="Home" data-bn="হোম" class="{% if request.resolver_match.url_name == 'home' %}active{% endif %}">Home</a>
+        <a href="{% url 'menu' %}" data-en="Menu" data-bn="মেনু" class="{% if request.resolver_match.url_name == 'menu' %}active{% endif %}">Menu</a>
+        <a href="{% url 'offers' %}" data-en="Offers" data-bn="অফার">Offers</a>
+        <a href="{% url 'outlets' %}?mode=DINE_IN" data-en="Dine-in" data-bn="বসে খান">Dine-in</a>
+      </nav>
+      <div class="header-actions">
+        <button class="icon-action theme-toggle" type="button" title="Switch white/dark theme" aria-label="Switch theme"><span class="theme-glyph">◐</span></button>
+        <button class="language-toggle" type="button" data-language-toggle title="Toggle interface labels between English and Bangla"><span>EN</span> <span>/</span> বাংলা</button>
+        <a class="signin-link" href="{% if user.is_authenticated %}{% url 'order_history' %}{% else %}{% url 'login' %}{% endif %}">{% if user.is_authenticated %}ACCOUNT{% else %}SIGN IN{% endif %}</a><a class="cart-link" href="{% url 'cart' %}" aria-label="Shopping cart"><span data-en="CART" data-bn="কার্ট">CART</span> <span class="cart-count">{{ cart_count }}</span></a>
+        <button class="menu-toggle" type="button" aria-label="Open menu" aria-expanded="false"><span></span><span></span></button>
+      </div>
+    </div>
+    <div class="side-menu" id="sideMenu" aria-hidden="true">
+      <div class="side-menu-head"><span class="eyebrow">TAZA FOOD CORNER</span><button class="close-menu" type="button" aria-label="Close menu">×</button></div>
+      <a href="{% url 'offers' %}" data-en="Offers" data-bn="অফার">Offers <span>↗</span></a>
+      <a href="{% url 'coupons' %}" data-en="Coupons" data-bn="কুপন">Coupons <span>↗</span></a>
+      <a href="{% url 'order_history' %}" data-en="Order history" data-bn="অর্ডার ইতিহাস">Order history <span>↗</span></a>
+      <a href="{% url 'menu' %}?mode=DELIVERY" data-en="Delivery" data-bn="ডেলিভারি">Delivery <span>↗</span></a>
+      <a href="{% url 'outlets' %}?mode=DINE_IN">Find an outlet <span>↗</span></a>
+      <a href="{% url 'opening_hours' %}">Outlet opening hours <span>↗</span></a>
+      <a href="{% url 'feedback' %}">Feedback <span>↗</span></a>
+      <a href="{% url 'faq' %}">FAQ <span>↗</span></a>
+      <a href="{% url 'contact' %}">Contact us <span>↗</span></a>
+      <a href="{% url 'about' %}">About <span>↗</span></a>
+      {% if user.is_authenticated %}
+        <div class="side-user">Signed in as <strong>{{ user.username }}</strong></div>
+        <form method="post" action="{% url 'logout' %}">{% csrf_token %}<button class="side-logout" type="submit">Sign out</button></form>
+      {% else %}
+        <a class="side-signin" href="{% url 'login' %}">Sign in</a>
+        <a href="{% url 'signup' %}">Create account</a>
+      {% endif %}
+    </div>
+    <div class="menu-scrim" id="menuScrim"></div>
+  </header>
+
+  {% if messages %}<div class="message-stack container" aria-live="polite">{% for message in messages %}<div class="message message-{{ message.tags }}"><span>{{ message }}</span><button type="button" aria-label="Dismiss message">×</button></div>{% endfor %}</div>{% endif %}
+
+  <main>{% block content %}{% endblock %}</main>
+
+  <footer class="site-footer">
+    <div class="footer-main container">
+      <div class="footer-brand-col">
+        <a class="brand brand-footer" href="{% url 'home' %}"><img class="brand-logo" src="{% static 'store/images/taza-logo.png' %}" alt="Restaurant Fork and Spoon logo" width="54" height="54" decoding="async"><span class="brand-copy"><strong>TAZA</strong><small>FOOD CORNER</small></span></a>
+        <p>Good food brings people together.<br>We make every bite count.</p>
+        <div class="footer-social"><span>f</span><span>◎</span><span>in</span></div>
+      </div>
+      <div class="footer-col"><h3>VISIT US</h3><a href="{% url 'opening_hours' %}">Outlet opening hour</a><a href="{% url 'outlets' %}?mode=DINE_IN">Find an outlet</a><a href="{% url 'contact' %}">Contact us</a></div>
+      <div class="footer-col"><h3>HELP & SUPPORT</h3><a href="{% url 'feedback' %}">Feedback</a><a href="{% url 'faq' %}">FAQ</a><a href="{% url 'order_history' %}">Order history</a></div>
+      <div class="footer-col"><h3>TAZA</h3><a href="{% url 'about' %}">About</a><a href="{% url 'offers' %}">Offers</a><a href="{% url 'coupons' %}">Coupons</a></div>
+    </div>
+    <div class="footer-bottom"><div class="container"><span>© {% now "Y" %} TAZA FOOD CORNER. ALL RIGHTS RESERVED.</span><span>MADE WITH CARE · RED / BLACK / WHITE</span></div></div>
+  </footer>
+  <script src="{% static 'store/app.js' %}"></script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

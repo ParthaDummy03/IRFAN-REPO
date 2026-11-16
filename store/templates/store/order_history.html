@@ -1,0 +1,6 @@
+{% extends 'store/base.html' %}
+{% block title %}Order History | TAZA FOOD CORNER{% endblock %}
+{% block content %}
+<section class="page-hero container compact-hero"><div><span class="eyebrow red-eyebrow">YOUR TAZA ACCOUNT</span><h1>Order <em>history.</em></h1><p>Your previous orders, all in one place.</p></div></section>
+<section class="history-list container">{% for order in orders %}<article class="history-card"><div><span class="eyebrow red-eyebrow">{{ order.created_at|date:"d M Y · h:i A" }}</span><h3>#{{ order.order_number }}</h3><p>{{ order.get_fulfilment_display }} · {{ order.items.count }} item(s)</p></div><div><span class="status-pill">{{ order.get_status_display }}</span><strong>৳{{ order.total }}</strong><a href="{% url 'order_confirmed' order.order_number %}">View order ↗</a></div></article>{% empty %}<div class="empty-state history-empty"><h2>No orders yet.</h2><p>Your Taza order history will appear here after your first order.</p><a class="button button-red" href="{% url 'menu' %}">Explore menu <span>→</span></a></div>{% endfor %}</section>
+{% endblock %}

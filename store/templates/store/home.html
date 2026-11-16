@@ -1,0 +1,49 @@
+{% extends 'store/base.html' %}
+{% block title %}TAZA FOOD CORNER | Fresh food, happy moments{% endblock %}
+{% block content %}
+<section class="home-hero container">
+  <div class="hero-copy">
+    <span class="eyebrow red-eyebrow">GOOD FOOD. GOOD MOOD.</span>
+    <h1>Your cravings.<br><em>Our kitchen.</em></h1>
+    <p>Freshly prepared favourites, made with care and delivered with a smile. Find your next Taza favourite.</p>
+    <div class="hero-actions"><a class="button button-red" href="{% url 'menu' %}?mode=DELIVERY">Order for delivery <span>→</span></a><a class="button button-outline" href="{% url 'outlets' %}?mode=DINE_IN">Dine in with us</a></div>
+    <div class="hero-meta"><span><b>01</b> FRESHLY MADE</span><i></i><span><b>02</b> FULL OF FLAVOUR</span></div>
+  </div>
+  <div class="hero-art">
+    <div class="hero-art-circle"></div>
+    <img class="hero-food-img" src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=1100" alt="Fresh burger" onerror="this.style.display='none'">
+    <div class="hero-stamp"><span>THE</span><strong>TAZA<br> TASTE</strong><span>MADE FRESH</span></div>
+    <div class="hero-caption"><span class="caption-line"></span><span>FRESH. BOLD. TAZA.</span></div>
+  </div>
+</section>
+
+<section class="choice-strip container">
+  <a class="choice-card choice-delivery" href="{% url 'menu' %}?mode=DELIVERY"><span class="choice-number">01 / DELIVERY</span><span class="choice-title">Enjoy Taza<br>at your place.</span><span class="choice-cta">Explore menu <b>↗</b></span><span class="choice-graphic">D</span></a>
+  <a class="choice-card choice-dinein" href="{% url 'outlets' %}?mode=DINE_IN"><span class="choice-number">02 / DINE-IN</span><span class="choice-title">Your table<br>is waiting.</span><span class="choice-cta">Find an outlet <b>↗</b></span><span class="choice-graphic">T</span></a>
+</section>
+
+<section class="featured-section container">
+  <div class="section-heading"><div><span class="eyebrow red-eyebrow">A LITTLE SOMETHING EXTRA</span><h2>Offers in <em>featured.</em></h2></div><a class="text-link" href="{% url 'offers' %}">View all offers <span>↗</span></a></div>
+  <div class="offer-grid">
+    {% for banner in banners %}
+    <a class="offer-banner {{ banner.class }}" href="{% url 'offers' %}">
+      <span class="offer-index">0{{ forloop.counter }} / FEATURED OFFER</span>
+      <span class="offer-eyebrow">{{ banner.eyebrow }}</span>
+      <strong>{{ banner.title }}</strong>
+      <span class="offer-detail">{{ banner.detail }}</span>
+      <span class="offer-code">USE CODE <b>{{ banner.code }}</b></span>
+      <span class="offer-arrow">↗</span>
+    </a>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="product-showcase section-soft">
+  <div class="container">
+    <div class="section-heading"><div><span class="eyebrow red-eyebrow">HAND-PICKED FOR YOU</span><h2>Featured <em>favourites.</em></h2></div><a class="text-link" href="{% url 'menu' %}">Explore all items <span>↗</span></a></div>
+    <div class="product-grid">{% for product in featured_products %}{% include 'store/partials_product_card.html' %}{% empty %}<p class="empty-state">No featured items yet. Add products in the admin panel.</p>{% endfor %}</div>
+  </div>
+</section>
+
+<section class="brand-statement container"><span class="statement-mark">T</span><div><span class="eyebrow red-eyebrow">THE TAZA PROMISE</span><h2>Made fresh.<br><em>Made for moments.</em></h2></div><p>From a quick bite to a table full of friends, we bring flavour, freshness and a little joy to every order.</p></section>
+{% endblock %}

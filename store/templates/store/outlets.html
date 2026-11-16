@@ -1,0 +1,19 @@
+{% extends 'store/base.html' %}
+{% load static %}
+{% block title %}Find an Outlet | TAZA FOOD CORNER{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">{% endblock %}
+{% block content %}
+<section class="page-hero container compact-hero"><div><span class="eyebrow red-eyebrow">PAGE 03 · OUTLET FINDER</span><h1>Come on <em>over.</em></h1><p>Find your nearest Taza outlet. Allow location access to see outlets within your chosen radius.</p></div><div class="page-hero-side"><span class="big-page-number">03</span><span>FIND YOUR OUTLET</span></div></section>
+<section class="outlet-finder container" data-api-url="{% url 'api_nearby_outlets' %}" data-select-url-template="{% url 'select_outlet' 999999 %}" data-mode="{{ mode }}">
+  <div class="location-permission-card"><div class="location-icon">⌖</div><div><span class="eyebrow">LOCATION PERMISSION</span><h2>Find Taza <em>near you.</em></h2><p id="locationMessage">We’ll use your location only to calculate nearby outlets. Your browser will ask permission after you press the button.</p></div><button id="useLocation" class="button button-red" type="button">Use my location <span>↗</span></button></div>
+  <div class="outlet-controls"><div><label for="radiusRange">SEARCH RADIUS</label><strong><span id="radiusValue">10</span> KM</strong><input id="radiusRange" type="range" min="1" max="30" value="10"></div><span class="outlet-mode-label">SELECT FOR: <b>{% if mode == 'DINE_IN' %}DINE-IN{% else %}DELIVERY{% endif %}</b></span></div>
+  <form id="csrfOutletForm" class="hidden-form">{% csrf_token %}</form>
+  <div class="outlet-map-layout"><div class="outlet-map-panel"><div class="map-panel-heading"><span>OUTLETS AROUND YOU</span><span class="map-live-dot"></span></div><div id="outletMap" aria-label="Map showing Taza outlets"></div><p class="map-disclaimer">Map tiles require an internet connection. Demo outlets are sample locations and must be replaced with your real branch details.</p></div>
+    <div class="outlet-list-panel"><div class="outlet-list-heading"><div><span class="eyebrow red-eyebrow">PICK YOUR SPOT</span><h2>Outlet <em>list.</em></h2></div><span class="outlet-count" id="outletCount">{{ outlets|length }}</span></div><div id="outletList" class="outlet-list">{% for outlet in outlets %}<article class="outlet-card"><div class="outlet-card-top"><span class="outlet-pin">0{{ forloop.counter }}</span><span class="outlet-area">{{ outlet.area|default:"TAZA OUTLET" }}</span></div><h3>{{ outlet.name }}</h3><p>{{ outlet.address }}</p><a class="outlet-phone" href="tel:{{ outlet.phone }}">☎ {{ outlet.phone }}</a><small>{{ outlet.opening_hours }}</small><form method="post" action="{% url 'select_outlet' outlet.id %}">{% csrf_token %}<input type="hidden" name="mode" value="{{ mode }}"><button class="button button-outline button-full" type="submit">Select this outlet <span>→</span></button></form>{% if outlet.is_demo %}<em class="demo-tag">DEMO LOCATION</em>{% endif %}</article>{% empty %}<div class="empty-state">No active outlets yet. Add outlets in Django Admin.</div>{% endfor %}</div></div>
+  </div>
+</section>
+{% endblock %}
+{% block extra_js %}
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script src="{% static 'store/outlets.js' %}"></script>
+{% endblock %}

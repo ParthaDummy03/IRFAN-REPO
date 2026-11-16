@@ -1,0 +1,12 @@
+{% extends 'store/base.html' %}
+{% block title %}Menu | TAZA FOOD CORNER{% endblock %}
+{% block content %}
+<section class="page-hero container"><div><span class="eyebrow red-eyebrow">PAGE 02 · DELIVERY MENU</span><h1>All the good<br><em>stuff.</em></h1><p>Explore every Taza favourite. Choose your item and set the quantity in units.</p></div><div class="page-hero-side"><span class="big-page-number">02</span><span>ALL PRODUCTS<br>FRESHLY PREPARED</span></div></section>
+<section class="menu-section container">
+  <div class="menu-toolbar"><div class="menu-categories"><a class="category-chip {% if not active_category %}selected{% endif %}" href="{% url 'menu' %}">All items</a>{% for category in categories %}<a class="category-chip {% if active_category == category.slug %}selected{% endif %}" href="?category={{ category.slug }}">{{ category.name }}</a>{% endfor %}</div>
+    <form class="search-form" method="get"><input type="hidden" name="category" value="{{ active_category }}"><input name="q" value="{{ search_query }}" placeholder="Search food..." aria-label="Search food"><button type="submit">SEARCH ↗</button></form></div>
+  <div class="menu-results-head"><span><strong>{{ products|length }}</strong> ITEMS AVAILABLE</span><span>COUNT IN UNIT · PRICES IN BDT</span></div>
+  <div class="product-grid product-grid-large">{% for product in products %}{% include 'store/partials_product_card.html' %}{% empty %}<div class="empty-state">No items found. Try another category or search.</div>{% endfor %}</div>
+  <div class="menu-bottom-cta"><p>Found your favourites?</p><a class="button button-red" href="{% url 'cart' %}">Review your cart <span>→</span></a></div>
+</section>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends 'store/base.html' %}
+{% block title %}Payment Options | TAZA FOOD CORNER{% endblock %}
+{% block content %}
+<section class="page-hero container compact-hero"><div><span class="eyebrow red-eyebrow">PAGE 05 · PAYMENT OPTION</span><h1>Choose how<br>to <em>pay.</em></h1><p>Securely select the payment option that works for you.</p></div><div class="page-hero-side"><span class="big-page-number">05</span><span>PAYMENT OPTIONS</span></div></section>
+<section class="payment-layout container"><div class="payment-options-panel"><span class="eyebrow red-eyebrow">SELECT PAYMENT METHOD</span><h2>One last <em>step.</em></h2><form method="post" action="{% url 'choose_payment' order.order_number %}">{% csrf_token %}{% if order.fulfilment == 'DINE_IN' %}
+  <label class="payment-option"><input type="radio" name="payment_method" value="OUTLET" checked><span class="payment-icon">⌂</span><span class="payment-copy"><b>Pay at outlet</b><small>Settle your bill at the selected branch.</small></span><span class="radio-dot"></span></label>
+  {% else %}
+  <label class="payment-option"><input type="radio" name="payment_method" value="CASH" checked><span class="payment-icon">৳</span><span class="payment-copy"><b>Cash on delivery</b><small>Pay in cash when your order arrives.</small></span><span class="radio-dot"></span></label>
+  {% endif %}
+  <label class="payment-option demo-payment"><input type="radio" name="payment_method" value="BKASH_DEMO"><span class="payment-icon">bK</span><span class="payment-copy"><b>bKash · demo only</b><small>Simulated payment for project demonstration. No real transaction.</small></span><span class="demo-chip">DEMO</span></label>
+  <label class="payment-option demo-payment"><input type="radio" name="payment_method" value="CARD_DEMO"><span class="payment-icon">▣</span><span class="payment-copy"><b>Card · demo only</b><small>Simulated payment for project demonstration. No card details are collected.</small></span><span class="demo-chip">DEMO</span></label>
+  <button class="button button-red button-full" type="submit">Confirm payment option <span>→</span></button></form><p class="payment-security">Your project does not store card numbers, CVV, PINs or banking passwords. Real online payments require a verified payment gateway.</p></div>
+  <aside class="order-summary payment-summary"><span class="eyebrow red-eyebrow">PAYMENT SUMMARY</span><h2>Order <em>{{ order.order_number }}</em></h2><div class="summary-line"><span>Order total</span><b>৳{{ order.total }}</b></div><div class="summary-total"><span>Amount due</span><strong>৳{{ order.total }}</strong></div><p class="summary-note">Payment status: <b>{{ order.payment_status }}</b></p><a class="text-link" href="{% url 'order_confirmed' order.order_number %}">← Back to confirmed order</a></aside></section>
+{% endblock %}
