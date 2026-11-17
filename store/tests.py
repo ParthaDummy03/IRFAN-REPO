@@ -1,3 +1,4 @@
+import json
 from decimal import Decimal
 from django.test import TestCase
 from django.urls import reverse
@@ -78,3 +79,27 @@ class TazaWebsiteTests(TestCase):
         order = Order.objects.get(customer_name="Test Customer")
         self.assertEqual(order.total, Decimal("310.00"))
         self.assertEqual(order.items.count(), 1)
+
+
+class CartAndAssistantRegressionTests(TazaWebsiteTests):
+    def test_cart_subtotal_and_update_and_remove(self):
+        self.client.post(reverse("add_to_cart", args=[self.product.id]), {"quantity": "2"})
+        response = self.client.get(reverse("cart"))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context["subtotal"], Decimal("500.00"))
+        self.assertEqual(response.context["total"], Decimal("560.00"))
+        self.client.post(reverse("update_cart", args=[self.product.id]), {"quantity": "3"})
+        self.assertEqual(self.client.get(reverse("cart")).context["subtotal"], Decimal("750.00"))
+        self.client.post(reverse("remove_cart_item", args=[self.product.id]))
+        self.assertEqual(self.client.get(reverse("cart")).context["subtotal"], Decimal("0.00"))
+
+    def test_assistant_returns_catalog_fallback(self):
+        from unittest.mock import patch
+        with patch.dict("os.environ", {"OPENAI_API_KEY": ""}):
+            response = self.client.post(reverse("assistant_chat"), data=json.dumps({"message": "under 300 tk"}), content_type="application/json")
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("Taza Test Burger", response.json()["reply"])
+
+    def test_assistant_rejects_invalid_payload(self):
+        response = self.client.post(reverse("assistant_chat"), data=json.dumps({"message": ""}), content_type="application/json")
+        self.assertEqual(response.status_code, 400)

@@ -73,6 +73,16 @@
     </div>
     <div class="footer-bottom"><div class="container"><span>© {% now "Y" %} TAZA FOOD CORNER. ALL RIGHTS RESERVED.</span><span>MADE WITH CARE · RED / BLACK / WHITE</span></div></div>
   </footer>
+  <section class="taza-assistant" id="tazaAssistant" aria-label="খাবার সহকারী">
+    <button type="button" class="assistant-toggle" id="assistantToggle" aria-expanded="false" aria-controls="assistantPanel">খাবার সহকারী</button>
+    <div class="assistant-panel" id="assistantPanel" hidden>
+      <header class="assistant-header"><strong>তাজা খাবার সহকারী</strong><button type="button" id="assistantClose" aria-label="বন্ধ করুন">×</button></header>
+      <p class="assistant-note">মেনু, দাম ও খাবারের পরামর্শ জানতে প্রশ্ন করুন। অর্ডার বা পেমেন্ট এখানে হয় না।</p>
+      <div class="assistant-messages" id="assistantMessages" aria-live="polite"><p class="assistant-bot">স্বাগতম! কী ধরনের খাবার খুঁজছেন?</p></div>
+      <form id="assistantForm" data-url="{% url 'assistant_chat' %}">{% csrf_token %}<label class="sr-only" for="assistantInput">আপনার প্রশ্ন</label><input id="assistantInput" maxlength="500" placeholder="আপনার প্রশ্ন লিখুন..." required><button type="submit">পাঠান</button></form>
+    </div>
+  </section>
+  <script src="{% static 'store/assistant.js' %}" defer></script>
   <script src="{% static 'store/app.js' %}"></script>
   {% block extra_js %}{% endblock %}
 </body>

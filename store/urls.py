@@ -1,8 +1,10 @@
 from django.contrib.auth import views as auth_views
 from django.urls import path
 from . import views
+from .assistant_views import assistant_chat
 
 urlpatterns = [
+    path("assistant/chat/", assistant_chat, name="assistant_chat"),
     path("", views.home, name="home"),
     path("menu/", views.menu, name="menu"),
     path("cart/", views.cart_page, name="cart"),
